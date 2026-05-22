@@ -12,6 +12,8 @@ export const getNotes = async (req, res) => {
     }
 };
 
+
+
 // CREATE note
 export const createNote = async (req, res) => {
     try {
@@ -22,6 +24,36 @@ export const createNote = async (req, res) => {
         });
 
         res.status(201).json(note);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
+export const updateNote = async (req, res) => {
+    try {
+        const { id, title } = await req.body
+        
+        const note = await Note.updateOne(title, id)
+        res.status(200).json(note)
+    } catch (error) {
+        res.status(500).json({
+            message : error.message
+        })
+    }
+}
+
+export const deleteNote = async (
+    req,
+    res
+) => {
+    try {
+        const { id } = req.params;
+        await Note.findByIdAndDelete(id);
+        res.status(200).json({
+            message: "Note deleted",
+        });
     } catch (error) {
         res.status(500).json({
             message: error.message,
