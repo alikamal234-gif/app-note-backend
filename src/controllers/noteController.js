@@ -33,9 +33,9 @@ export const createNote = async (req, res) => {
 
 export const updateNote = async (req, res) => {
     try {
-        const { id, title } = await req.body
-        
-        const note = await Note.updateOne(title, id)
+        const { title } = await req.body
+        const { id } = req.params
+        const note = await Note.findByIdAndUpdate(id,{title},{new:true})
         res.status(200).json(note)
     } catch (error) {
         res.status(500).json({
