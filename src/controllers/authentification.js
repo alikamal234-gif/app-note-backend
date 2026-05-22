@@ -5,8 +5,8 @@ export const register = async (req, res) => {
     try {
         const { name, password, ville } = req.body
 
-        const users = User.findOne(name)
-        if (user) {
+        const is_exist_name = await User.findOne(name)
+        if (is_exist_name) {
             return res
                 .status(400)
                 .json({
