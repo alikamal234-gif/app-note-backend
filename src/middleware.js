@@ -1,17 +1,21 @@
-import jwt from "jsonwebtoken";
-
 export const authMiddleware =
   (req, res, next) => {
     try {
+      console.log(
+        req.headers
+          .authorization
+      );
+
       const authHeader =
-        req.headers.authorization;
+        req.headers
+          .authorization;
 
       if (!authHeader) {
         return res
           .status(401)
           .json({
             message:
-              "Unauthorized",
+              "No token",
           });
       }
 
@@ -20,6 +24,10 @@ export const authMiddleware =
           " "
         )[1];
 
+      console.log(
+        token
+      );
+
       const decoded =
         jwt.verify(
           token,
@@ -27,11 +35,19 @@ export const authMiddleware =
             .JWT_SECRET
         );
 
+      console.log(
+        decoded
+      );
+
       req.user =
         decoded;
 
       next();
-    } catch {
+    } catch (error) {
+      console.log(
+        error
+      );
+
       return res
         .status(401)
         .json({
