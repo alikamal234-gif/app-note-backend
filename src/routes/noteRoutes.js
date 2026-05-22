@@ -5,9 +5,14 @@ import {
     updateNote,
     deleteNote,
 } from "../controllers/noteController.js";
+import { authMiddleware } from "../middleware.js";
 
 const router = express.Router();
-router.get("/", getNotes);
+router.get(
+  "/notes",
+  authMiddleware,
+  getNotes
+);
 router.post("/", createNote);
 router.put("/:id", updateNote);
 router.delete("/:id", deleteNote);
