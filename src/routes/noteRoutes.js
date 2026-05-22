@@ -9,7 +9,7 @@ import {
 
 import {
   authMiddleware,
-} from "../middleware/authMiddleware.js";
+} from "../middleware.js";
 
 const router =
   express.Router();
