@@ -5,7 +5,8 @@ export const register = async (req, res) => {
     try {
         const { name, password, ville } = req.body
 
-        const is_exist_name = await User.findOne(name)
+        const is_exist_name = await User.findOne({name})
+        console.log(is_exist_name)
         if (is_exist_name) {
             return res
                 .status(400)
@@ -54,3 +55,13 @@ export const login = async (req, res) => {
         })
     }
 }
+
+export const getUsers = async (req,res) => {
+    try{
+        const users = await User.find()
+
+        res.status(200).json(users)
+    }catch(err){
+        console.log(err)
+    }
+}   
