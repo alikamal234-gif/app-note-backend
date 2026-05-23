@@ -3,7 +3,7 @@ import Note from "../models/Note.js";
 // GET all notes
 export const getNotes = async (req, res) => {
     try {
-        const notes = await Note.find().sort({ createdAt: -1 });
+        const notes = await Note.find({ userId: req.user.id }).sort({ createdAt: -1 });
         res.status(200).json(notes);
     } catch (error) {
         res.status(500).json({
@@ -12,8 +12,6 @@ export const getNotes = async (req, res) => {
     }
 };
 
-
-
 // CREATE note
 export const createNote = async (req, res) => {
     try {
@@ -21,6 +19,7 @@ export const createNote = async (req, res) => {
 
         const note = await Note.create({
             title,
+            userId: req.user.id,
         });
 
         res.status(201).json(note);
@@ -33,14 +32,23 @@ export const createNote = async (req, res) => {
 
 export const updateNote = async (req, res) => {
     try {
-        const { title } = await req.body
-        const { id } = req.params
-        const note = await Note.findByIdAndUpdate(id,{title},{new:true})
-        res.status(200).json(note)
+        const { title } = req.body;
+        const { id } = req.params;
+        const note = await Note.findOneAndUpdate(
+            { _id: id, userId: req.user.id },
+            { title },
+            { new: true }
+        );
+        
+        if (!note) {
+            return res.status(404).json({ message: "Note not found or unauthorized" });
+        }
+        
+        res.status(200).json(note);
     } catch (error) {
         res.status(500).json({
             message : error.message
-        })
+        });
     }
 }
 
@@ -50,7 +58,12 @@ export const deleteNote = async (
 ) => {
     try {
         const { id } = req.params;
-        await Note.findByIdAndDelete(id);
+        const note = await Note.findOneAndDelete({ _id: id, userId: req.user.id });
+        
+        if (!note) {
+            return res.status(404).json({ message: "Note not found or unauthorized" });
+        }
+        
         res.status(200).json({
             message: "Note deleted",
         });
