@@ -25,7 +25,10 @@ mongoose
     .connect(process.env.MONGO_URI)
     .then(() => console.log("MongoDB connected"))
     .catch((err) => console.log(err));
-
+app.use((req, res, next) => {
+  console.log(req.method, req.url);
+  next();
+});
 app.use("/api/notes", noteRoutes);
 app.use("/api/auth",authRoutes)
 app.get("/", (req, res) => {

@@ -16,6 +16,7 @@ export const register = async (req, res) => {
                         "Ce nom existe déjà",
                 });
         }
+        
         const passwordhash = await bcrypt.hash(password, 10)
         const user = await User.create({
             name, passwordhash, ville
