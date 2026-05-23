@@ -12,7 +12,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://web-rho-jade-96.vercel.app",
     credentials: true,
   })
 );
